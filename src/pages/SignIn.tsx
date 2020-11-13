@@ -7,21 +7,18 @@ import logo from '../assets/logo.svg';
 const SignIn: React.FC = () => (
   <Container>
     <Content>
-      <div className="wrapper">
-        <img src={logo} alt="logo" />
-        <form>
-          <h1>Credenciais</h1>
-          <input placeholder="Email" type="text" />
-          <input placeholder="Senha" type="password" />
-          <button type="submit">Entrar</button>
-          <Link to="asdasda">Esqueci minha senha</Link>
-
-          <Link to="asdasda">
-            <FiLogIn />
-            Criar conta
-          </Link>
-        </form>
-      </div>
+      <img src={logo} alt="logo" />
+      <form>
+        <h1>Credenciais</h1>
+        <input placeholder="Email" type="text" />
+        <input placeholder="Senha" type="password" />
+        <button type="submit">Entrar</button>
+        <Link to="asdasda">Esqueci minha senha</Link>
+      </form>
+      <Link to="asdasda">
+        <FiLogIn />
+        Criar conta
+      </Link>
     </Content>
     <Background />
   </Container>
