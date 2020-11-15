@@ -34,7 +34,7 @@ export const Content = styled.div`
     }
   }
   > a {
-    color: #ff9000;
+    color: #f4ede8;
     display: block;
     margin-top: 24px;
     transition: all 0.2s;
