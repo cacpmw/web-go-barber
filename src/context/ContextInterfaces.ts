@@ -10,6 +10,7 @@ interface ISignInCredentials {
 interface IAuthenticationContextData {
   user: object;
   signIn(credentials: ISignInCredentials): Promise<void>;
+  signOut(): void;
 }
 
 export type {

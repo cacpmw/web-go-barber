@@ -1,15 +1,29 @@
-import React, { createContext, useCallback, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 import api from '../services/api';
 import {
   IAuthenticationContextData,
   IAuthenticationData,
 } from './ContextInterfaces';
 
-export const AuthenticationContext = createContext<IAuthenticationContextData>(
+// context api
+const AuthenticationContext = createContext<IAuthenticationContextData>(
   {} as IAuthenticationContextData,
 );
 
-export const AuthenticationProvider: React.FC = ({ children }) => {
+// authentication hook
+function useAuthenticationContext(): IAuthenticationContextData {
+  const context = useContext(AuthenticationContext);
+  if (!context) {
+    throw new Error(
+      'useAuthenticationContext must be used within an AuthenticationProvider',
+    );
+  }
+  return context;
+}
+
+// component
+const AuthenticationProvider: React.FC = ({ children }) => {
+  // Initialize auth data if there any on localstorage otherwise set it to empty
   const [authenticationData, setAuthenticationData] = useState<
     IAuthenticationData
   >(() => {
@@ -20,6 +34,7 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
     }
     return {} as IAuthenticationData;
   });
+
   const signIn = useCallback(async ({ email, password }) => {
     const response = await api.post('sessions', {
       email,
@@ -33,11 +48,22 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
       user,
     });
   }, []);
+
+  const signOut = useCallback(() => {
+    const token = localStorage.getItem('@gobarber:token');
+    const user = localStorage.getItem('@gobarber:user');
+    if (token && user) {
+      localStorage.removeItem('@gobarber:token');
+      localStorage.removeItem('@gobarber:user');
+    }
+  }, []);
   return (
     <AuthenticationContext.Provider
-      value={{ user: authenticationData.user, signIn }}
+      value={{ user: authenticationData.user, signIn, signOut }}
     >
       {children}
     </AuthenticationContext.Provider>
   );
 };
+
+export { AuthenticationProvider, useAuthenticationContext };

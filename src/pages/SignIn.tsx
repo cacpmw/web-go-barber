@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Container, Content, Background } from '../styles/pages/signin';
-import { AuthenticationContext } from '../context/AuthenticationContext';
+import { useAuthenticationContext } from '../context/AuthenticationContext';
 import logo from '../assets/logo.svg';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -16,8 +16,7 @@ interface SignInFormData {
 }
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { user, signIn } = useContext(AuthenticationContext);
-  console.log(user);
+  const { user, signIn } = useAuthenticationContext();
   const handleForm = useCallback(
     async (data: SignInFormData) => {
       try {
