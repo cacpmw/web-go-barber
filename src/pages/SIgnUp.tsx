@@ -28,29 +28,32 @@ const SignUp: React.FC = () => {
   const { showToast } = useToast();
   const history = useHistory();
 
-  const handleForm = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
-      await signUpValidator.validate(data, { abortEarly: false });
-      await api.post('users', data);
-      showToast({
-        title: 'Welcome',
-        type: 'success',
-        description: 'Successfully signed up',
-      });
-      history.push('/');
-    } catch (error) {
-      if (error instanceof ValidationError) {
-        const errors = getValidationErrors(error);
-        formRef.current?.setErrors(errors);
+  const handleForm = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
+        await signUpValidator.validate(data, { abortEarly: false });
+        await api.post('users', data);
+        showToast({
+          title: 'Welcome',
+          type: 'success',
+          description: 'Successfully signed up',
+        });
+        history.push('/');
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          const errors = getValidationErrors(error);
+          formRef.current?.setErrors(errors);
+        }
+        showToast({
+          type: 'error',
+          title: 'Algo deu errado!',
+          description: 'Não foi possivel realizar o cadastro.',
+        });
       }
-      showToast({
-        type: 'error',
-        title: 'Algo deu errado!',
-        description: 'Não foi possivel realizar o cadastro.',
-      });
-    }
-  }, []);
+    },
+    [showToast, history],
+  );
   return (
     <Container>
       <Background />
