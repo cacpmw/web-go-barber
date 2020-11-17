@@ -3,7 +3,7 @@ import api from '../services/api';
 import {
   IAuthenticationContextData,
   IAuthenticationData,
-} from './ContextInterfaces';
+} from './interfaces/AuthenticationContextInterfaces';
 
 // context api
 const AuthenticationContext = createContext<IAuthenticationContextData>(

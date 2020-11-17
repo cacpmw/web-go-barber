@@ -1,14 +1,14 @@
 import React from 'react';
 import GlobalStyles from './styles/global';
 import Routes from './routes/routes';
-import { AuthenticationProvider } from './context/AuthenticationContext';
+import AppProvider from './context/AppContext';
 
 const App: React.FC = () => {
   return (
     <>
-      <AuthenticationProvider>
+      <AppProvider>
         <Routes />
-      </AuthenticationProvider>
+      </AppProvider>
       <GlobalStyles />
     </>
   );

@@ -1,10 +1,12 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Form } from '@unform/web';
 import { Link } from 'react-router-dom';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
+import { ValidationError } from 'yup';
 import { Container, Content, Background } from '../styles/pages/signin';
 import { useAuthenticationContext } from '../context/AuthenticationContext';
+import { useToast } from '../context/ToastContext';
 import logo from '../assets/logo.svg';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -16,23 +18,32 @@ interface SignInFormData {
 }
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { user, signIn } = useAuthenticationContext();
+  const { signIn } = useAuthenticationContext();
+  const { showToast } = useToast();
   const handleForm = useCallback(
     async (data: SignInFormData) => {
       try {
         formRef.current?.setErrors({});
         await signInValidator.validate(data, { abortEarly: false });
         const { email, password } = data;
-        signIn({
+        await signIn({
           email,
           password,
         });
       } catch (error) {
-        const errors = getValidationErrors(error);
-        formRef.current?.setErrors(errors);
+        if (error instanceof ValidationError) {
+          const errors = getValidationErrors(error);
+          formRef.current?.setErrors(errors);
+        }
+        showToast({
+          type: 'error',
+          title: 'Algo deu errado!',
+          description:
+            'Não foi possivel realizar o login. Cheque as credenciais.',
+        });
       }
     },
-    [signIn],
+    [signIn, showToast],
   );
   return (
     <Container>
