@@ -49,7 +49,7 @@ const SignUp: React.FC = () => {
             />
             <Button type="submit">Signup</Button>
           </Form>
-          <Link to="/signin">
+          <Link to="/">
             <FiArrowLeft />
             Signin
           </Link>
