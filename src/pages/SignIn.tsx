@@ -4,7 +4,12 @@ import { Link } from 'react-router-dom';
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { ValidationError } from 'yup';
-import { Container, Content, Background } from '../styles/pages/signin';
+import {
+  Container,
+  Content,
+  Background,
+  AnimationContainer,
+} from '../styles/pages/signin';
 import { useAuthenticationContext } from '../context/AuthenticationContext';
 import { useToast } from '../context/ToastContext';
 import logo from '../assets/logo.svg';
@@ -48,29 +53,31 @@ const SignIn: React.FC = () => {
   return (
     <Container>
       <Content>
-        <img src={logo} alt="logo" />
-        <Form ref={formRef} onSubmit={handleForm}>
-          <h1>Credentials</h1>
-          <Input
-            autoFocus
-            name="email"
-            icon={FiMail}
-            placeholder="Email"
-            type="text"
-          />
-          <Input
-            name="password"
-            icon={FiLock}
-            placeholder="Password"
-            type="password"
-          />
-          <Button type="submit">Signin</Button>
-          <Link to="asdasda">I forgot my password</Link>
-        </Form>
-        <Link to="/signup">
-          <FiLogIn />
-          Signup
-        </Link>
+        <AnimationContainer>
+          <img src={logo} alt="logo" />
+          <Form ref={formRef} onSubmit={handleForm}>
+            <h1>Credentials</h1>
+            <Input
+              autoFocus
+              name="email"
+              icon={FiMail}
+              placeholder="Email"
+              type="text"
+            />
+            <Input
+              name="password"
+              icon={FiLock}
+              placeholder="Password"
+              type="password"
+            />
+            <Button type="submit">Signin</Button>
+            <Link to="asdasda">I forgot my password</Link>
+          </Form>
+          <Link to="/signup">
+            <FiLogIn />
+            Signup
+          </Link>
+        </AnimationContainer>
       </Content>
       <Background />
     </Container>
