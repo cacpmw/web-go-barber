@@ -23,6 +23,13 @@ const forgotPasswordValidator = Yup.object().shape({
     .required('Email is required')
     .email('Enter a valid email address'),
 });
+const resetPasswordValidator = Yup.object().shape({
+  password: Yup.string().required('This field is required'),
+  passwordConfirmation: Yup.string().oneOf(
+    [Yup.ref('password')],
+    'Passwords must match',
+  ),
+});
 
 const getValidationErrors = (error: Yup.ValidationError): Errors => {
   const validationErrors: Errors = {};
@@ -36,5 +43,6 @@ export {
   signUpValidator,
   signInValidator,
   forgotPasswordValidator,
+  resetPasswordValidator,
   getValidationErrors,
 };
