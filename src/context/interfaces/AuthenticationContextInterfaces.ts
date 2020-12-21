@@ -1,6 +1,11 @@
+interface User {
+  name: string;
+  id: string;
+  avatarUrl: string;
+}
 interface IAuthenticationData {
   token: string;
-  user: object;
+  user: User;
 }
 
 interface ISignInCredentials {
@@ -8,7 +13,7 @@ interface ISignInCredentials {
   password: string;
 }
 interface IAuthenticationContextData {
-  user: object;
+  user: User;
   signIn(credentials: ISignInCredentials): Promise<void>;
   signOut(): void;
 }
