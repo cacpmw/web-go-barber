@@ -1,7 +1,7 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Form } from '@unform/web';
 import { Link, useHistory } from 'react-router-dom';
-import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
+import { FiLogIn, FiMail } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { ValidationError } from 'yup';
 import {
@@ -10,33 +10,38 @@ import {
   Background,
   AnimationContainer,
 } from '../styles/pages/signin';
-import { useAuthenticationContext } from '../context/AuthenticationContext';
 import { useToast } from '../context/ToastContext';
 import logo from '../assets/logo.svg';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { getValidationErrors, signInValidator } from '../validator/Validator';
+import {
+  getValidationErrors,
+  forgotPasswordValidator,
+} from '../validator/Validator';
+import api from '../services/api';
 
-interface SignInFormData {
+interface FormData {
   email: string;
-  password: string;
 }
-const SignIn: React.FC = () => {
+const ForgotPassword: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
-  const { signIn } = useAuthenticationContext();
   const { showToast } = useToast();
   const handleForm = useCallback(
-    async (data: SignInFormData) => {
+    async (data: FormData) => {
       try {
+        setLoading(true);
         formRef.current?.setErrors({});
-        await signInValidator.validate(data, { abortEarly: false });
-        const { email, password } = data;
-        await signIn({
-          email,
-          password,
+        await forgotPasswordValidator.validate(data, { abortEarly: false });
+        const { email } = data;
+        await api.post('password/forgot', { email });
+        showToast({
+          type: 'success',
+          title: 'Email successfully sent!',
+          description: 'Please check your inbox for instructions',
         });
-        history.push('/dashboard');
+        // history.push('/dashboard');
       } catch (error) {
         if (error instanceof ValidationError) {
           const errors = getValidationErrors(error);
@@ -44,13 +49,14 @@ const SignIn: React.FC = () => {
         }
         showToast({
           type: 'error',
-          title: 'Algo deu errado!',
-          description:
-            'Não foi possivel realizar o login. Cheque as credenciais.',
+          title: 'Something went wrong!',
+          description: 'We could not process your request.',
         });
+      } finally {
+        setLoading(false);
       }
     },
-    [signIn, showToast, history],
+    [showToast],
   );
   return (
     <Container>
@@ -58,7 +64,7 @@ const SignIn: React.FC = () => {
         <AnimationContainer>
           <img src={logo} alt="logo" />
           <Form ref={formRef} onSubmit={handleForm}>
-            <h1>Credentials</h1>
+            <h1>Password Recovery</h1>
             <Input
               autoFocus
               name="email"
@@ -66,18 +72,13 @@ const SignIn: React.FC = () => {
               placeholder="Email"
               type="text"
             />
-            <Input
-              name="password"
-              icon={FiLock}
-              placeholder="Password"
-              type="password"
-            />
-            <Button type="submit">Signin</Button>
-            <Link to="/forgot">I forgot my password</Link>
+            <Button loading={loading} type="submit">
+              Send
+            </Button>
           </Form>
-          <Link to="/signup">
+          <Link to="/">
             <FiLogIn />
-            Signup
+            Signin
           </Link>
         </AnimationContainer>
       </Content>
@@ -85,4 +86,4 @@ const SignIn: React.FC = () => {
     </Container>
   );
 };
-export default SignIn;
+export default ForgotPassword;

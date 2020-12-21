@@ -18,6 +18,11 @@ const signInValidator = Yup.object().shape({
     .email('Enter a valid email address'),
   password: Yup.string().min(6, 'Password must have at least 6 characters'),
 });
+const forgotPasswordValidator = Yup.object().shape({
+  email: Yup.string()
+    .required('Email is required')
+    .email('Enter a valid email address'),
+});
 
 const getValidationErrors = (error: Yup.ValidationError): Errors => {
   const validationErrors: Errors = {};
@@ -27,4 +32,9 @@ const getValidationErrors = (error: Yup.ValidationError): Errors => {
   return validationErrors;
 };
 
-export { signUpValidator, signInValidator, getValidationErrors };
+export {
+  signUpValidator,
+  signInValidator,
+  forgotPasswordValidator,
+  getValidationErrors,
+};
