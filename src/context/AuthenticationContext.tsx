@@ -3,6 +3,7 @@ import api from '../services/api';
 import {
   IAuthenticationContextData,
   IAuthenticationData,
+  User,
 } from './interfaces/AuthenticationContextInterfaces';
 
 // context api
@@ -30,6 +31,8 @@ const AuthenticationProvider: React.FC = ({ children }) => {
     const token = localStorage.getItem('@gobarber:token');
     const user = localStorage.getItem('@gobarber:user');
     if (token && user) {
+      // automagically injects the token to every api call
+      api.defaults.headers.Authorization = `Bearer ${token}`;
       return { token, user: JSON.parse(user) };
     }
     return {} as IAuthenticationData;
@@ -42,6 +45,8 @@ const AuthenticationProvider: React.FC = ({ children }) => {
     const { token, user } = response.data;
     localStorage.setItem('@gobarber:token', token);
     localStorage.setItem('@gobarber:user', JSON.stringify(user));
+    // automagically injects the token to every api call
+    api.defaults.headers.Authorization = `Bearer ${token}`;
     setAuthenticationData({
       token,
       user,
@@ -56,9 +61,20 @@ const AuthenticationProvider: React.FC = ({ children }) => {
       localStorage.removeItem('@gobarber:user');
     }
   }, []);
+
+  const updateUserData = useCallback(
+    (user: User) => {
+      setAuthenticationData({
+        token: authenticationData.token,
+        user,
+      });
+      localStorage.setItem('@gobarber:user', JSON.stringify(user));
+    },
+    [authenticationData.token],
+  );
   return (
     <AuthenticationContext.Provider
-      value={{ user: authenticationData.user, signIn, signOut }}
+      value={{ user: authenticationData.user, signIn, signOut, updateUserData }}
     >
       {children}
     </AuthenticationContext.Provider>
