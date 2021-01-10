@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Form } from '@unform/web';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiLogIn, FiMail } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { ValidationError } from 'yup';
@@ -26,7 +26,6 @@ interface FormData {
 const ForgotPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const formRef = useRef<FormHandles>(null);
-  const history = useHistory();
   const { showToast } = useToast();
   const handleForm = useCallback(
     async (data: FormData) => {
